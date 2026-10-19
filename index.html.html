@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>無線電競耳機挑選器 | 找到你的完美聽覺武裝</title>
+  <style>
+    :root {
+      --bg-main: #121212;
+      --bg-card: #1E1E1E;
+      --bg-option: #262626;
+      --bg-option-hover: rgba(0, 216, 255, 0.08);
+      --accent-primary: #00D8FF;
+      --accent-glow: rgba(0, 216, 255, 0.35);
+      --text-primary: #F5F5F5;
+      --text-secondary: #B3B3B3;
+      --border-default: #333333;
+      --transition-base: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-main);
+      background-image: radial-gradient(circle at 50% 0%, rgba(0, 216, 255, 0.08) 0%, transparent 60%);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 640px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: 16px;
+      padding: 40px 32px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+    }
+
+    .view-section {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* View 1: Welcome Screen */
+    #view-welcome {
+      display: block;
+      text-align: center;
+    }
+
+    .eyebrow-badge {
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent-primary);
+      background-color: rgba(0, 216, 255, 0.1);
+      border: 1px solid rgba(0, 216, 255, 0.35);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: rgba(0, 216, 255, 0.08);
+      border: 1px solid rgba(0, 216, 255, 0.25);
+      color: var(--accent-primary);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .feature-pills {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .feature-pill {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background-color: var(--bg-option);
+      border: 1px solid var(--border-default);
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--accent-primary);
+      color: #121212;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 36px;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--accent-glow);
+      outline: none;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* View 2: Quiz Section */
+    #view-quiz {
+      display: none;
+    }
+
+    .quiz-header {
+      margin-bottom: 24px;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      letter-spacing: 0.04em;
+    }
+
+    .category-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background-color: #2C2C2C;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    #progress-fill {
+      height: 100%;
+      width: 33.33%;
+      background-color: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-glow);
+      transition: var(--transition-base);
+    }
+
+    #question-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .option-btn {
+      width: 100%;
+      background-color: var(--bg-option);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: left;
+      color: var(--text-primary);
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: var(--transition-base);
+    }
+
+    @media (hover: hover) {
+      .option-btn:hover {
+        border-color: var(--accent-primary);
+        background-color: var(--bg-option-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 216, 255, 0.2);
+      }
+    }
+
+    .option-btn:focus-visible {
+      border-color: var(--accent-primary);
+      background-color: var(--bg-option-hover);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+      outline: none;
+    }
+
+    .option-btn:active {
+      transform: translateY(0);
+    }
+
+    .option-badge {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-color: rgba(0, 216, 255, 0.12);
+      border: 1px solid rgba(0, 216, 255, 0.4);
+      color: var(--accent-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: var(--transition-base);
+    }
+
+    @media (hover: hover) {
+      .option-btn:hover .option-badge {
+        background-color: var(--accent-primary);
+        color: #121212;
+      }
+    }
+
+    .option-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .option-main {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .option-sub {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .quiz-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .btn-back {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 6px 0;
+      transition: var(--transition-base);
+    }
+
+    .btn-back:hover {
+      color: var(--accent-primary);
+    }
+
+    /* View 3: Result Section */
+    #view-result {
+      display: none;
+      text-align: center;
+    }
+
+    .result-card {
+      background-color: var(--bg-option);
+      border: 1px solid rgba(0, 216, 255, 0.35);
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin: 16px 0 28px;
+      box-shadow: 0 0 24px rgba(0, 216, 255, 0.1);
+    }
+
+    .result-model-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .tags-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tag-pill {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      background-color: rgba(0, 216, 255, 0.12);
+      border: 1px solid rgba(0, 216, 255, 0.3);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .result-desc {
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .summary-box {
+      background-color: rgba(18, 18, 18, 0.65);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: left;
+    }
+
+    .summary-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .summary-list li span {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: transparent;
+      color: var(--accent-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      border: 1.5px solid var(--accent-primary);
+      border-radius: 8px;
+      padding: 13px 32px;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .btn-secondary:hover,
+    .btn-secondary:focus-visible {
+      background-color: var(--accent-primary);
+      color: #121212;
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px var(--accent-glow);
+      outline: none;
+    }
+
+    .btn-secondary:active {
+      transform: translateY(0);
+    }
+
+    /* Responsive Design (Mobile <= 600px) */
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      .app-container {
+        padding: 28px 20px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      #question-title {
+        font-size: 1.25rem;
+      }
+
+      .result-model-title {
+        font-size: 1.5rem;
+      }
+
+      .option-btn {
+        padding: 16px 18px;
+      }
+
+      .option-main {
+        font-size: 1rem;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-container">
+    <!-- 視圖一：歡迎畫面 (Welcome Screen) -->
+    <section id="view-welcome" class="view-section">
+      <div class="eyebrow-badge">GAMING GEAR FINDER</div>
+      <div class="hero-icon" aria-hidden="true">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+        </svg>
+      </div>
+      <h1>無線電競耳機挑選器</h1>
+      <p class="subtitle">簡單 3 個問題，找到你的完美聽覺武裝</p>
+      <div class="feature-pills">
+        <span class="feature-pill">⚡ 30 秒快速診斷</span>
+        <span class="feature-pill">🎯 聽感與定位分析</span>
+        <span class="feature-pill">🛡️ 舒適材質配對</span>
+      </div>
+      <button id="btn-start" class="btn-primary" type="button">
+        開始測試
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </section>
+
+    <!-- 視圖二：問答互動區 (Quiz Section) -->
+    <section id="view-quiz" class="view-section">
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <span id="progress-text" class="progress-label">問題 1/3</span>
+          <span id="category-text" class="category-label">預算與定位</span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-fill"></div>
+        </div>
+      </div>
+
+      <h2 id="question-title">追求極致規格與降噪？ 還是講求高 CP 值的實戰利器？</h2>
+
+      <div id="options-container" class="options-grid">
+        <button id="btn-option-a" class="option-btn" type="button" data-choice="A">
+          <span class="option-badge">A</span>
+          <span class="option-content">
+            <span id="option-a-main" class="option-main">預算充足，全都要。</span>
+            <span id="option-a-sub" class="option-sub">鎖定旗艦級規格、主動降噪與頂級做工</span>
+          </span>
+        </button>
+
+        <button id="btn-option-b" class="option-btn" type="button" data-choice="B">
+          <span class="option-badge">B</span>
+          <span class="option-content">
+            <span id="option-b-main" class="option-main">高 CP 值優先。</span>
+            <span id="option-b-sub" class="option-sub">追求刀口上的預算配置與越級實戰性能</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="quiz-footer">
+        <button id="btn-prev" class="btn-back" type="button">← 返回上一題</button>
+      </div>
+    </section>
+
+    <!-- 視圖三：結果推薦區 (Result Section) -->
+    <section id="view-result" class="view-section">
+      <div class="eyebrow-badge">為你鎖定的最佳聽覺武裝</div>
+      <h1>推薦專屬耳機型號</h1>
+
+      <div class="result-card">
+        <h2 id="result-name" class="result-model-title">Sony INZONE H9 II</h2>
+        <div id="result-tags" class="tags-row"></div>
+        <p id="result-desc" class="result-desc"></p>
+
+        <div class="summary-box">
+          <div class="summary-title">你的硬體需求與習慣配對</div>
+          <ul id="user-summary-list" class="summary-list"></ul>
+        </div>
+      </div>
+
+      <button id="btn-restart" class="btn-secondary" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        重新測驗
+      </button>
+    </section>
+  </main>
+
+  <script>
+    // 1. 測驗題目資料庫
+    const QUESTIONS = [
+      {
+        category: '預算與定位',
+        question: '追求極致規格與降噪？ 還是講求高 CP 值的實戰利器？',
+        options: {
+          A: {
+            main: '預算充足，全都要。',
+            sub: '鎖定旗艦級規格、主動降噪與頂級做工（權重導向旗艦機型）',
+            shortLabel: '預算充足・旗艦規格'
+          },
+          B: {
+            main: '高 CP 值優先。',
+            sub: '追求刀口上的預算配置與越級實戰性能（權重導向平價/中階機型）',
+            shortLabel: '高 CP 值・實戰優先'
+          }
+        }
+      },
+      {
+        category: '遊戲類型與聽感需求',
+        question: '你常玩哪種類型的遊戲？',
+        options: {
+          A: {
+            main: '重視聽聲辨位的高強度競技',
+            sub: '如 Rainbow Six Siege、Deadlock、CS2 等射擊競技大作',
+            shortLabel: '高強度競技・聽聲辨位'
+          },
+          B: {
+            main: '重視整體氛圍、影音雙棲',
+            sub: '暢玩 3A 劇情大作、日常追劇與音樂沉浸聆聽',
+            shortLabel: '整體氛圍・影音雙棲'
+          }
+        }
+      },
+      {
+        category: '配戴舒適度與材質',
+        question: '對於耳罩材質的偏好？',
+        options: {
+          A: {
+            main: '透氣網布 / 輕量化優先',
+            sub: '長時間激戰不悶熱，追求無負擔羽量配戴感',
+            shortLabel: '透氣網布・輕量化'
+          },
+          B: {
+            main: '皮革隔音 / 舒適包覆優先',
+            sub: '高密度物理隔音與柔軟貼合的沉浸包覆感',
+            shortLabel: '皮革隔音・舒適包覆'
+          }
+        }
+      }
+    ];
+
+    // 2. 耳機推薦結果資料庫
+    const RESULTS = {
+      H9_II: {
+        name: 'Sony INZONE H9 II',
+        tags: ['極致規格', '影音雙棲', '高包覆隔音'],
+        description: '旗艦級無線降噪電競耳機首選。搭載頂級主動降噪技術與 360 空間音效引擎，結合柔軟高包覆感耳罩，無論是在 3A 大作中享受震撼音場，還是在競技場上精準捕捉敵蹤，都能帶來無可挑剔的沉浸體驗。'
+      },
+      V9_PRO_2: {
+        name: 'Mchose V9 Pro 2',
+        tags: ['高 CP 值', '均衡聽感', '材質升級'],
+        description: '兼顧遊戲與日常影音的全能型高性價比戰神。擁有極佳的三頻均衡調音與升級版親膚皮革耳罩材質，提供優異的物理隔音與舒適包覆度，讓你以親民預算享受越級的沉浸音質與超長續航表現。'
+      },
+      CUNYUAN: {
+        name: '寸淵影弑',
+        tags: ['高 CP 值', '極致聽聲辨位', '輕量透氣'],
+        description: '專為硬核 FPS 與戰術競技玩家打造的聽聲辨位利器。針對腳步聲、換彈聲與空間方位細節進行特化調校，搭配輕量化機身與透氣網布耳罩，長時間高強度排位依然乾爽零負擔。'
+      },
+      R9: {
+        name: 'Mchose R9',
+        tags: ['高 CP 值', '入門首選', '輕巧實用'],
+        description: '無線電競耳機的高 CP 值守門員與入門首選。具備穩定低延遲的無線連線表現與輕巧透氣不夾頭的配戴體驗，完美滿足日常遊戲、語音開黑與綜合影音娛樂需求，輕鬆入手無負擔。'
+      }
+    };
+
+    // 3. 二元決策樹 8 路徑對應矩陣 (Q1 + Q2 + Q3)
+    const DECISION_TREE = {
+      ABB: 'H9_II',     // 預算充足 + 影音雙棲 + 皮革隔音 -> Sony INZONE H9 II
+      ABA: 'H9_II',     // 預算充足 + 影音雙棲 + 透氣輕量 -> Sony INZONE H9 II
+      AAB: 'H9_II',     // 預算充足 + 高強度競技 + 皮革隔音 -> Sony INZONE H9 II
+      AAA: 'CUNYUAN',   // 預算充足 + 高強度競技 + 透氣輕量 -> 寸淵影弑 (硬核競技輕量特化)
+      BAA: 'CUNYUAN',   // 高 CP 值 + 高強度競技 + 透氣輕量 -> 寸淵影弑
+      BAB: 'V9_PRO_2',  // 高 CP 值 + 高強度競技 + 皮革隔音 -> Mchose V9 Pro 2
+      BBB: 'V9_PRO_2',  // 高 CP 值 + 影音雙棲 + 皮革隔音 -> Mchose V9 Pro 2
+      BBA: 'R9'         // 高 CP 值 + 影音雙棲 + 透氣輕量 -> Mchose R9
+    };
+
+    // 4. 狀態變數與 DOM 參照
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    const viewWelcome = document.getElementById('view-welcome');
+    const viewQuiz = document.getElementById('view-quiz');
+    const viewResult = document.getElementById('view-result');
+
+    const btnStart = document.getElementById('btn-start');
+    const btnOptionA = document.getElementById('btn-option-a');
+    const btnOptionB = document.getElementById('btn-option-b');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnRestart = document.getElementById('btn-restart');
+
+    const progressText = document.getElementById('progress-text');
+    const categoryText = document.getElementById('category-text');
+    const progressFill = document.getElementById('progress-fill');
+    const questionTitle = document.getElementById('question-title');
+    const optionAMain = document.getElementById('option-a-main');
+    const optionASub = document.getElementById('option-a-sub');
+    const optionBMain = document.getElementById('option-b-main');
+    const optionBSub = document.getElementById('option-b-sub');
+
+    const resultName = document.getElementById('result-name');
+    const resultTags = document.getElementById('result-tags');
+    const resultDesc = document.getElementById('result-desc');
+    const userSummaryList = document.getElementById('user-summary-list');
+
+    // 5. 視圖切換函式 (透過 display: none 與 block 控制)
+    function switchView(targetView) {
+      [viewWelcome, viewQuiz, viewResult].forEach((section) => {
+        section.style.display = 'none';
+      });
+      targetView.style.display = 'block';
+      // 重新觸發淡入動畫
+      targetView.style.animation = 'none';
+      void targetView.offsetWidth;
+      targetView.style.animation = 'fadeIn 0.3s ease forwards';
+    }
+
+    // 6. 渲染當前題目
+    function renderQuestion() {
+      const currentQ = QUESTIONS[currentQuestionIndex];
+      const stepNumber = currentQuestionIndex + 1;
+      const totalSteps = QUESTIONS.length;
+
+      progressText.textContent = `問題 ${stepNumber}/${totalSteps}`;
+      categoryText.textContent = currentQ.category;
+      progressFill.style.width = `${(stepNumber / totalSteps) * 100}%`;
+
+      questionTitle.textContent = currentQ.question;
+      optionAMain.textContent = currentQ.options.A.main;
+      optionASub.textContent = currentQ.options.A.sub;
+      optionBMain.textContent = currentQ.options.B.main;
+      optionBSub.textContent = currentQ.options.B.sub;
+
+      btnPrev.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+    }
+
+    // 7. 處理選項點擊
+    function handleSelectOption(choice) {
+      userAnswers[currentQuestionIndex] = choice;
+
+      if (currentQuestionIndex < QUESTIONS.length - 1) {
+        currentQuestionIndex += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // 8. 計算並顯示推薦結果
+    function showResult() {
+      const pathKey = userAnswers.join('');
+      const resultKey = DECISION_TREE[pathKey] || 'V9_PRO_2';
+      const recommendation = RESULTS[resultKey];
+
+      resultName.textContent = recommendation.name;
+      resultDesc.textContent = recommendation.description;
+
+      // 渲染標籤
+      resultTags.innerHTML = '';
+      recommendation.tags.forEach((tag) => {
+        const span = document.createElement('span');
+        span.className = 'tag-pill';
+        span.textContent = tag;
+        resultTags.appendChild(span);
+      });
+
+      // 渲染使用者選擇摘要
+      userSummaryList.innerHTML = '';
+      QUESTIONS.forEach((q, idx) => {
+        const chosenKey = userAnswers[idx];
+        const chosenInfo = q.options[chosenKey];
+        const li = document.createElement('li');
+        li.innerHTML = `• ${q.category}：<span>${chosenInfo.shortLabel}</span>`;
+        userSummaryList.appendChild(li);
+      });
+
+      switchView(viewResult);
+    }
+
+    // 9. 綁定事件監聽器
+    btnStart.addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      userAnswers = [];
+      renderQuestion();
+      switchView(viewQuiz);
+    });
+
+    btnOptionA.addEventListener('click', () => handleSelectOption('A'));
+    btnOptionB.addEventListener('click', () => handleSelectOption('B'));
+
+    btnPrev.addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    btnRestart.addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      userAnswers = [];
+      switchView(viewWelcome);
+    });
+  </script>
+</body>
+</html>
